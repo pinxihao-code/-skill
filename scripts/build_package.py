@@ -9,11 +9,12 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "blur-video-faces"
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 SKILL_DIR = REPO_ROOT / "skills" / SKILL_NAME
 DIST_DIR = REPO_ROOT / "dist"
 ARCHIVE = DIST_DIR / f"{SKILL_NAME}-skill-v{VERSION}.zip"
 FIXED_TIME = (2026, 1, 1, 0, 0, 0)
+TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml"}
 
 
 def included_files() -> list[Path]:
@@ -24,6 +25,15 @@ def included_files() -> list[Path]:
         and "__pycache__" not in path.parts
         and path.suffix != ".pyc"
     )
+
+
+def package_bytes(path: Path) -> bytes:
+    """Return cross-platform deterministic bytes for a distributable file."""
+    data = path.read_bytes()
+    if path.suffix.lower() in TEXT_SUFFIXES:
+        text = data.decode("utf-8")
+        return text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+    return data
 
 
 def main() -> None:
@@ -42,7 +52,7 @@ def main() -> None:
             info = zipfile.ZipInfo(archive_name, FIXED_TIME)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
-            package.writestr(info, path.read_bytes())
+            package.writestr(info, package_bytes(path))
     print(f"Built {ARCHIVE} ({ARCHIVE.stat().st_size} bytes)")
 
 

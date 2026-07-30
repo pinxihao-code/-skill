@@ -10,15 +10,24 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "blur-video-faces"
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 SKILL_DIR = REPO_ROOT / "skills" / SKILL_NAME
 ARCHIVE = REPO_ROOT / "dist" / f"{SKILL_NAME}-skill-v{VERSION}.zip"
+TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml"}
 REQUIRED = {
     "SKILL.md",
     "agents/openai.yaml",
     "references/upstream.md",
     "scripts/run_face_blur.py",
 }
+
+
+def package_bytes(relative: str, data: bytes) -> bytes:
+    """Mirror the builder's cross-platform text normalization."""
+    if Path(relative).suffix.lower() in TEXT_SUFFIXES:
+        text = data.decode("utf-8")
+        return text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+    return data
 
 
 def source_files() -> dict[str, bytes]:
@@ -71,7 +80,7 @@ def validate_archive(files: dict[str, bytes]) -> None:
             )
         for relative, source_bytes in files.items():
             packaged = package.read(f"{SKILL_NAME}/{relative}")
-            if packaged != source_bytes:
+            if packaged != package_bytes(relative, source_bytes):
                 raise AssertionError(f"Archive content differs: {relative}")
 
 
