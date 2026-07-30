@@ -1,0 +1,4 @@
+interface:
+  display_name: "视频人脸打码"
+  short_description: "自动检测视频中的正脸、侧脸和多人脸并添加高斯模糊或马赛克"
+  default_prompt: "使用 $blur-video-faces 将指定视频中的所有人脸打码，并检查输出是否完整。"

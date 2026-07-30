@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+Thumbs.db
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.task
+*.tflite

@@ -1,0 +1,23 @@
+name: Validate Skill
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rebuild package
+        run: python scripts/build_package.py
+      - name: Verify package is reproducible
+        run: git diff --exit-code -- dist/
+      - name: Validate Skill
+        run: python scripts/validate_package.py
