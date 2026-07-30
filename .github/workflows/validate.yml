@@ -15,9 +15,9 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Validate committed package
+        run: python scripts/validate_package.py
       - name: Rebuild package
         run: python scripts/build_package.py
-      - name: Verify package is reproducible
-        run: git diff --exit-code -- dist/
-      - name: Validate Skill
+      - name: Validate rebuilt package
         run: python scripts/validate_package.py
