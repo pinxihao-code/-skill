@@ -10,7 +10,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "blur-video-faces"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 SKILL_DIR = REPO_ROOT / "skills" / SKILL_NAME
 ARCHIVE = REPO_ROOT / "dist" / f"{SKILL_NAME}-skill-v{VERSION}.zip"
 TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml"}

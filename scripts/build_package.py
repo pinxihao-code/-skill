@@ -9,7 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "blur-video-faces"
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 SKILL_DIR = REPO_ROOT / "skills" / SKILL_NAME
 DIST_DIR = REPO_ROOT / "dist"
 ARCHIVE = DIST_DIR / f"{SKILL_NAME}-skill-v{VERSION}.zip"
@@ -43,14 +43,14 @@ def main() -> None:
     with zipfile.ZipFile(
         ARCHIVE,
         "w",
-        compression=zipfile.ZIP_DEFLATED,
-        compresslevel=9,
+        compression=zipfile.ZIP_STORED,
     ) as package:
         for path in included_files():
             relative = path.relative_to(SKILL_DIR)
             archive_name = (Path(SKILL_NAME) / relative).as_posix()
             info = zipfile.ZipInfo(archive_name, FIXED_TIME)
-            info.compress_type = zipfile.ZIP_DEFLATED
+            # Stored entries avoid zlib-version-dependent output bytes.
+            info.compress_type = zipfile.ZIP_STORED
             info.external_attr = 0o644 << 16
             package.writestr(info, package_bytes(path))
     print(f"Built {ARCHIVE} ({ARCHIVE.stat().st_size} bytes)")
