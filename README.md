@@ -63,7 +63,7 @@ bash ./blur-video-faces-skill/install.sh
 
 ### 方法三：下载打包文件
 
-下载 [`dist/blur-video-faces-skill-v1.0.2.zip`](dist/blur-video-faces-skill-v1.0.2.zip)，把其中的 `blur-video-faces` 文件夹复制到上面的默认 Skill 目录。
+下载 [`dist/blur-video-faces-skill-v1.0.3.zip`](dist/blur-video-faces-skill-v1.0.3.zip)，把其中的 `blur-video-faces` 文件夹复制到上面的默认 Skill 目录。
 
 ## Agent 使用方法
 

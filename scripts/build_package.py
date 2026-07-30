@@ -9,7 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "blur-video-faces"
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 SKILL_DIR = REPO_ROOT / "skills" / SKILL_NAME
 DIST_DIR = REPO_ROOT / "dist"
 ARCHIVE = DIST_DIR / f"{SKILL_NAME}-skill-v{VERSION}.zip"
@@ -49,6 +49,7 @@ def main() -> None:
             relative = path.relative_to(SKILL_DIR)
             archive_name = (Path(SKILL_NAME) / relative).as_posix()
             info = zipfile.ZipInfo(archive_name, FIXED_TIME)
+            info.create_system = 3
             # Stored entries avoid zlib-version-dependent output bytes.
             info.compress_type = zipfile.ZIP_STORED
             info.external_attr = 0o644 << 16

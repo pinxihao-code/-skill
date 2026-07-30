@@ -10,10 +10,11 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_NAME = "blur-video-faces"
-VERSION = "1.0.2"
+VERSION = "1.0.3"
 SKILL_DIR = REPO_ROOT / "skills" / SKILL_NAME
 ARCHIVE = REPO_ROOT / "dist" / f"{SKILL_NAME}-skill-v{VERSION}.zip"
 TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml"}
+FIXED_TIME = (2026, 1, 1, 0, 0, 0)
 REQUIRED = {
     "SKILL.md",
     "agents/openai.yaml",
@@ -79,7 +80,15 @@ def validate_archive(files: dict[str, bytes]) -> None:
                 f"extra={sorted(names - expected)}"
             )
         for relative, source_bytes in files.items():
-            packaged = package.read(f"{SKILL_NAME}/{relative}")
+            archive_name = f"{SKILL_NAME}/{relative}"
+            info = package.getinfo(archive_name)
+            if info.create_system != 3:
+                raise AssertionError(f"Archive platform metadata differs: {relative}")
+            if info.compress_type != zipfile.ZIP_STORED:
+                raise AssertionError(f"Archive compression is not deterministic: {relative}")
+            if info.date_time != FIXED_TIME:
+                raise AssertionError(f"Archive timestamp differs: {relative}")
+            packaged = package.read(archive_name)
             if packaged != package_bytes(relative, source_bytes):
                 raise AssertionError(f"Archive content differs: {relative}")
 
